@@ -1,0 +1,61 @@
+---
+import { formatDate, type Post } from '../lib/posts';
+
+interface Props {
+  posts: Post[];
+}
+
+const { posts } = Astro.props;
+---
+
+<ul>
+  {
+    posts.map((post) => (
+      <li>
+        <time class="mono muted" datetime={post.data.pubDate.toISOString()}>
+          {formatDate(post.data.pubDate)}
+        </time>
+        <a href={`/blog/${post.id}/`}>
+          {post.data.title}
+          {post.data.draft && <span class="mono draft">草稿</span>}
+        </a>
+      </li>
+    ))
+  }
+</ul>
+
+<style>
+  ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  li {
+    display: grid;
+    grid-template-columns: 6.5rem 1fr;
+    align-items: baseline;
+    gap: 0.5rem;
+    padding-block: 0.45rem;
+  }
+
+  a {
+    text-decoration: none;
+  }
+
+  .draft {
+    margin-left: 0.5rem;
+    padding: 0.1em 0.45em;
+    border-radius: 4px;
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+
+  @media (max-width: 30rem) {
+    li {
+      grid-template-columns: 1fr;
+      gap: 0;
+      padding-block: 0.6rem;
+    }
+  }
+</style>

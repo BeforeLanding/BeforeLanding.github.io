@@ -1,0 +1,90 @@
+---
+import Base from '../layouts/Base.astro';
+import PostList from '../components/PostList.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { HOME_POST_COUNT, SITE } from '../consts';
+import { PROJECTS } from '../data/projects';
+import { getPosts } from '../lib/posts';
+
+const posts = (await getPosts()).slice(0, HOME_POST_COUNT);
+const featured = PROJECTS.filter((p) => p.featured);
+---
+
+<Base>
+  <section class="hero">
+    <p class="mono muted kicker">{SITE.tagline}</p>
+    <h1>你好，我是 {SITE.author.split(' ')[0]}。</h1>
+    <p class="lead">
+      我在做编程 Agent 的运行时与评测：让它可恢复、可检查、预算受控。这里记录过程中的设计取舍、踩过的坑，和一些还没想清楚的问题。
+    </p>
+
+    <!-- 下滑道：虚线进近，落在跑道上 -->
+    <svg class="approach" viewBox="0 0 680 56" preserveAspectRatio="none" aria-hidden="true">
+      <path class="glide" d="M0 4 L520 50" vector-effect="non-scaling-stroke"></path>
+      <path class="ground" d="M0 50 H680" vector-effect="non-scaling-stroke"></path>
+      <path
+        class="runway"
+        d="M540 50 v-6 M560 50 v-6 M580 50 v-6 M600 50 v-6 M620 50 v-6 M640 50 v-6 M660 50 v-6"
+        vector-effect="non-scaling-stroke"></path>
+    </svg>
+  </section>
+
+  <h2 class="section-title">最新文章 <a href="/blog/">全部 →</a></h2>
+  {posts.length > 0 ? <PostList posts={posts} /> : <p class="muted">还没有文章，很快就来。</p>}
+
+  <h2 class="section-title">项目 <a href="/projects/">全部 →</a></h2>
+  <div class="grid">
+    {featured.map((project) => <ProjectCard project={project} />)}
+  </div>
+</Base>
+
+<style>
+  .hero {
+    padding-top: 1.5rem;
+  }
+
+  .kicker {
+    margin: 0 0 0.75rem;
+    letter-spacing: 0.12em;
+  }
+
+  h1 {
+    margin: 0 0 1rem;
+    font-size: clamp(1.9rem, 6vw, 2.5rem);
+  }
+
+  .lead {
+    margin: 0;
+    max-width: 36rem;
+    color: var(--muted);
+  }
+
+  .approach {
+    display: block;
+    width: 100%;
+    height: 56px;
+    margin-top: 2rem;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+  }
+
+  .glide {
+    stroke: var(--accent);
+    stroke-dasharray: 5 7;
+  }
+
+  .ground {
+    stroke: var(--border);
+  }
+
+  .runway {
+    stroke: var(--muted);
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 0.9rem;
+  }
+</style>

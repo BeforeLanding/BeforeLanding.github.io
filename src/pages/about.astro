@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../consts';
+---
+
+<Base title="关于" description={`关于 ${SITE.author}。`}>
+  <header class="page-head">
+    <h1>关于</h1>
+  </header>
+
+  <div class="prose">
+    <p>
+      我是 {SITE.author}，在 GitHub 上叫
+      <a href={SITE.github} target="_blank" rel="noopener">{SITE.handle}</a>，目前在新加坡国立大学。
+    </p>
+
+    <p>
+      最近的精力主要放在编程 Agent 的工程问题上：怎么让一次长任务可以中断后恢复、每一步都能被检查、花费不失控，以及怎么用离线评测判断一个改动到底有没有变好。
+    </p>
+
+    {/* TODO: 本页文字为占位草稿，待替换为真实内容 */}
+    <h2>这个博客</h2>
+    <p>写给未来的自己，也写给碰到同样问题的人。大致会有三类内容：</p>
+    <ul>
+      <li>项目里的设计决策，以及当时为什么这么选</li>
+      <li>评测与实验记录，包括没跑出想要结果的那些</li>
+      <li>读代码、读论文的笔记</li>
+    </ul>
+
+    <h2>联系</h2>
+    <p>
+      最方便的方式是在 <a href={SITE.github} target="_blank" rel="noopener">GitHub</a>
+      对应的仓库里开 issue。
+    </p>
+  </div>
+</Base>

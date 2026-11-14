@@ -1,0 +1,28 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { countTags, getPosts, type Post } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return countTags(posts).map(([tag]) => ({
+    params: { tag },
+    props: { posts: posts.filter((post) => post.data.tags.includes(tag)) },
+  }));
+}
+
+interface Props {
+  posts: Post[];
+}
+
+const { tag } = Astro.params;
+const { posts } = Astro.props;
+---
+
+<Base title={`#${tag}`} description={`带有「${tag}」标签的文章。`}>
+  <header class="page-head">
+    <h1><span class="muted">#</span>{tag}</h1>
+    <p>共 {posts.length} 篇 · <a href="/blog/">全部文章</a></p>
+  </header>
+  <PostList posts={posts} />
+</Base>

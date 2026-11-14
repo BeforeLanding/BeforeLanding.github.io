@@ -1,0 +1,27 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="404" description="页面不存在。">
+  <section>
+    <p class="mono muted">404 · GO AROUND</p>
+    <h1>这里没有跑道。</h1>
+    <p class="muted">页面不存在，或者已经搬走了。</p>
+    <p><a href="/">← 回到首页</a></p>
+  </section>
+</Base>
+
+<style>
+  section {
+    padding-block: 3rem;
+  }
+
+  h1 {
+    margin: 0.5rem 0;
+    font-size: 2rem;
+  }
+
+  p {
+    margin: 0 0 1rem;
+  }
+</style>

@@ -1,0 +1,63 @@
+---
+import Base from '../../layouts/Base.astro';
+import PostList from '../../components/PostList.astro';
+import { countTags, getPosts, tagPath, type Post } from '../../lib/posts';
+
+const posts = await getPosts();
+const tags = countTags(posts);
+
+const byYear = new Map<number, Post[]>();
+for (const post of posts) {
+  const year = post.data.pubDate.getFullYear();
+  byYear.set(year, [...(byYear.get(year) ?? []), post]);
+}
+---
+
+<Base title="文章" description="全部文章，按时间倒序。">
+  <header class="page-head">
+    <h1>文章</h1>
+    <p>共 {posts.length} 篇。</p>
+  </header>
+
+  {
+    tags.length > 0 && (
+      <p class="tags">
+        {tags.map(([tag, count]) => (
+          <a class="tag" href={tagPath(tag)}>
+            {tag}
+            <span class="count">{count}</span>
+          </a>
+        ))}
+      </p>
+    )
+  }
+
+  {
+    [...byYear.entries()].map(([year, items]) => (
+      <section>
+        <h2 class="section-title">{year}</h2>
+        <PostList posts={items} />
+      </section>
+    ))
+  }
+
+  {posts.length === 0 && <p class="muted">还没有文章，很快就来。</p>}
+</Base>
+
+<style>
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.1rem;
+    margin: 0;
+  }
+
+  .count {
+    margin-left: 0.15em;
+    opacity: 0.6;
+  }
+
+  section:first-of-type .section-title {
+    margin-top: 2.25rem;
+  }
+</style>

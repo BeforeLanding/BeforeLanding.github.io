@@ -1,0 +1,124 @@
+---
+import { render } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import { formatDate, getPosts, readingMinutes, tagPath, type Post } from '../../lib/posts';
+
+export async function getStaticPaths() {
+  const posts = await getPosts();
+  return posts.map((post, i) => ({
+    params: { id: post.id },
+    // 列表按时间倒序：i+1 是更早的一篇，i-1 是更新的一篇
+    props: { post, older: posts[i + 1], newer: posts[i - 1] },
+  }));
+}
+
+interface Props {
+  post: Post;
+  older?: Post;
+  newer?: Post;
+}
+
+const { post, older, newer } = Astro.props;
+const { title, description, pubDate, updatedDate, tags, draft } = post.data;
+const { Content } = await render(post);
+---
+
+<Base title={title} description={description} type="article">
+  <article>
+    <header class="post-head">
+      <h1>{title}</h1>
+      <p class="mono muted meta">
+        <time datetime={pubDate.toISOString()}>{formatDate(pubDate)}</time>
+        {updatedDate && <span>更新于 {formatDate(updatedDate)}</span>}
+        <span>约 {readingMinutes(post.body)} 分钟</span>
+        {draft && <span class="draft">草稿</span>}
+      </p>
+      {
+        tags.length > 0 && (
+          <p class="tags">
+            {tags.map((tag) => (
+              <a class="tag" href={tagPath(tag)}>
+                {tag}
+              </a>
+            ))}
+          </p>
+        )
+      }
+    </header>
+
+    <div class="prose">
+      <Content />
+    </div>
+  </article>
+
+  <nav class="pager" aria-label="上一篇与下一篇">
+    {
+      older ? (
+        <a href={`/blog/${older.id}/`}>
+          <span class="mono muted">← 上一篇</span>
+          {older.data.title}
+        </a>
+      ) : (
+        <span />
+      )
+    }
+    {
+      newer && (
+        <a class="next" href={`/blog/${newer.id}/`}>
+          <span class="mono muted">下一篇 →</span>
+          {newer.data.title}
+        </a>
+      )
+    }
+  </nav>
+</Base>
+
+<style>
+  .post-head {
+    margin-bottom: 2.5rem;
+  }
+
+  h1 {
+    margin: 0 0 0.9rem;
+    font-size: clamp(1.7rem, 5vw, 2.1rem);
+  }
+
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1.1rem;
+    margin: 0;
+  }
+
+  .draft {
+    color: var(--accent);
+  }
+
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 1rem;
+    margin: 0.6rem 0 0;
+  }
+
+  .pager {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+    margin-top: 4rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border);
+    font-size: 0.9375rem;
+  }
+
+  .pager a {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    text-decoration: none;
+  }
+
+  .pager .next {
+    text-align: right;
+  }
+</style>

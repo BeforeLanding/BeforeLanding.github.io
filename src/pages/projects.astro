@@ -1,0 +1,28 @@
+---
+import Base from '../layouts/Base.astro';
+import ProjectCard from '../components/ProjectCard.astro';
+import { SITE } from '../consts';
+import { PROJECTS } from '../data/projects';
+---
+
+<Base title="项目" description="我做过和正在做的开源项目。">
+  <header class="page-head">
+    <h1>项目</h1>
+    <p>
+      做过和正在做的东西，主要围绕 Agent 运行时、检索与评测。更多在
+      <a href={SITE.github} target="_blank" rel="noopener">GitHub</a>。
+    </p>
+  </header>
+
+  <div class="grid">
+    {PROJECTS.map((project) => <ProjectCard project={project} />)}
+  </div>
+</Base>
+
+<style>
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    gap: 0.9rem;
+  }
+</style>

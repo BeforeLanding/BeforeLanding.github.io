@@ -1,0 +1,70 @@
+---
+import type { Project } from '../data/projects';
+
+interface Props {
+  project: Project;
+}
+
+const { project } = Astro.props;
+---
+
+<article>
+  <h3>
+    <a href={project.repo} target="_blank" rel="noopener">{project.name}</a>
+    {
+      project.link && (
+        <a class="mono extra" href={project.link.href} target="_blank" rel="noopener">
+          {project.link.label} ↗
+        </a>
+      )
+    }
+  </h3>
+  <p>{project.description}</p>
+  <p class="mono muted stack">{project.stack.join(' · ')}</p>
+</article>
+
+<style>
+  article {
+    display: flex;
+    flex-direction: column;
+    padding: 1.1rem 1.2rem;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: border-color 0.15s;
+  }
+
+  article:hover {
+    border-color: var(--muted);
+  }
+
+  h3 {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.75rem;
+    margin: 0 0 0.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.9375rem;
+  }
+
+  h3 a {
+    text-decoration: none;
+  }
+
+  .extra {
+    font-weight: 400;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.9375rem;
+    line-height: 1.65;
+  }
+
+  .stack {
+    margin-top: auto;
+    padding-top: 0.75rem;
+  }
+</style>
