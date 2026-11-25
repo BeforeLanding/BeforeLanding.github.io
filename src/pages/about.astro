@@ -1,9 +1,10 @@
 ---
 import Base from '../layouts/Base.astro';
 import { SITE } from '../consts';
+import { EDUCATION, EXPERIENCE } from '../data/resume';
 ---
 
-<Base title="关于" description={`关于 ${SITE.author}。`}>
+<Base title="关于" description={`关于 ${SITE.author}：教育背景与实习经历。`}>
   <header class="page-head">
     <h1>关于</h1>
   </header>
@@ -11,26 +12,159 @@ import { SITE } from '../consts';
   <div class="prose">
     <p>
       我是 {SITE.author}，在 GitHub 上叫
-      <a href={SITE.github} target="_blank" rel="noopener">{SITE.handle}</a>，目前在新加坡国立大学。
+      <a href={SITE.github} target="_blank" rel="noopener">{SITE.handle}</a>。本科读数学，现在在新加坡国立大学读人工智能硕士。
     </p>
-
     <p>
       最近的精力主要放在编程 Agent 的工程问题上：怎么让一次长任务可以中断后恢复、每一步都能被检查、花费不失控，以及怎么用离线评测判断一个改动到底有没有变好。
     </p>
+  </div>
 
-    {/* TODO: 本页文字为占位草稿，待替换为真实内容 */}
-    <h2>这个博客</h2>
-    <p>写给未来的自己，也写给碰到同样问题的人。大致会有三类内容：</p>
+  <h2 class="section-title">教育</h2>
+  <ol class="timeline">
+    {
+      EDUCATION.map((edu) => (
+        <li>
+          <div class="row">
+            <h3>
+              {edu.school}
+              <span class="sub">
+                {edu.major} · {edu.degree}
+              </span>
+            </h3>
+            <span class="mono muted period">{edu.period}</span>
+          </div>
+          <ul class="facts">
+            {edu.details.map((d) => (
+              <li>{d}</li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ol>
+
+  <h2 class="section-title">实习经历</h2>
+  <ol class="timeline">
+    {
+      EXPERIENCE.map((job) => (
+        <li>
+          <div class="row">
+            <h3>
+              {job.company}
+              <span class="sub">{job.role}</span>
+            </h3>
+            <span class="mono muted period">{job.period}</span>
+          </div>
+          <p class="summary">{job.summary}</p>
+          <ul class="points">
+            {job.highlights.map((h) => (
+              <li>
+                {h.title && <strong>{h.title}：</strong>}
+                {h.text}
+              </li>
+            ))}
+          </ul>
+          <p class="mono muted stack">{job.stack.join(' · ')}</p>
+        </li>
+      ))
+    }
+  </ol>
+
+  <div class="prose">
+    <h2>关于这个站点</h2>
+    <p>这里整理我的工程项目和经历，也记录三个方向的技术与学习笔记。</p>
     <ul>
-      <li>项目里的设计决策，以及当时为什么这么选</li>
-      <li>评测与实验记录，包括没跑出想要结果的那些</li>
-      <li>读代码、读论文的笔记</li>
+      <li>Agent 工程实践与评测复盘，记录设计取舍、实验结果和踩过的坑</li>
+      <li>AI for Math 与形式化验证观察，包括 Lean 和自动证明</li>
+      <li>从数学转向 AI 工程的学习与转码复盘</li>
     </ul>
 
     <h2>联系</h2>
     <p>
-      最方便的方式是在 <a href={SITE.github} target="_blank" rel="noopener">GitHub</a>
-      对应的仓库里开 issue。
+      {SITE.email && <>求职邮箱 <a href={`mailto:${SITE.email}`}>{SITE.email}</a><br /></>}
+      <a href={SITE.github} target="_blank" rel="noopener">GitHub</a>
     </p>
   </div>
 </Base>
+
+<style>
+  .timeline {
+    margin: 0 0 1rem;
+    padding: 0;
+    list-style: none;
+  }
+
+  .timeline > li {
+    position: relative;
+    padding: 0 0 2rem 1.4rem;
+    border-left: 1px solid var(--border);
+  }
+
+  .timeline > li:last-child {
+    padding-bottom: 0.5rem;
+  }
+
+  .timeline > li::before {
+    content: '';
+    position: absolute;
+    top: 0.55rem;
+    left: -0.3rem;
+    width: 0.55rem;
+    height: 0.55rem;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 2px solid var(--accent);
+  }
+
+  .row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.25rem 1rem;
+  }
+
+  h3 {
+    margin: 0;
+    font-size: 1.0625rem;
+  }
+
+  .sub {
+    margin-left: 0.6rem;
+    font-weight: 400;
+    color: var(--muted);
+  }
+
+  .period {
+    white-space: nowrap;
+  }
+
+  .summary {
+    margin: 0.5rem 0 0.6rem;
+  }
+
+  .facts,
+  .points {
+    margin: 0.4rem 0 0;
+    padding-left: 1.2rem;
+    font-size: 0.9375rem;
+    line-height: 1.7;
+  }
+
+  .facts li::marker,
+  .points li::marker {
+    color: var(--muted);
+  }
+
+  .points li + li {
+    margin-top: 0.4rem;
+  }
+
+  .stack {
+    margin: 0.75rem 0 0;
+  }
+
+  .prose:last-child {
+    margin-top: 1.5rem;
+  }
+</style>

@@ -261,6 +261,33 @@ main {
   font-family: inherit;
 }
 
+.prose :is(p, .katex-display):has(.katex) {
+  overflow-x: auto;
+}
+
+.prose .katex-display {
+  padding-block: 0.25rem;
+}
+
+.prose .katex-display > .katex {
+  width: max-content;
+  min-width: 100%;
+}
+
+.prose .mermaid-diagram {
+  padding: 1rem;
+  overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.mermaid-diagram svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-inline: auto;
+}
+
 /* Shiki 双主题：跟随站点的明暗切换 */
 .prose pre.astro-code {
   background-color: var(--surface) !important;

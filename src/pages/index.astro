@@ -4,6 +4,7 @@ import PostList from '../components/PostList.astro';
 import ProjectCard from '../components/ProjectCard.astro';
 import { HOME_POST_COUNT, SITE } from '../consts';
 import { PROJECTS } from '../data/projects';
+import { EDUCATION, EXPERIENCE } from '../data/resume';
 import { getPosts } from '../lib/posts';
 
 const posts = (await getPosts()).slice(0, HOME_POST_COUNT);
@@ -15,8 +16,13 @@ const featured = PROJECTS.filter((p) => p.featured);
     <p class="mono muted kicker">{SITE.tagline}</p>
     <h1>你好，我是 {SITE.author.split(' ')[0]}。</h1>
     <p class="lead">
-      我在做编程 Agent 的运行时与评测：让它可恢复、可检查、预算受控。这里记录过程中的设计取舍、踩过的坑，和一些还没想清楚的问题。
+      我在新加坡国立大学读人工智能硕士，本科读数学，目前聚焦编程 Agent 运行时、RAG 与评测。
     </p>
+    <nav class="hero-links mono" aria-label="快捷入口">
+      <a href={SITE.github} target="_blank" rel="noopener">GitHub</a>
+      {SITE.email && <a href={`mailto:${SITE.email}`}>Email</a>}
+      <a href="/about/">完整经历 →</a>
+    </nav>
 
     <!-- 下滑道：虚线进近，落在跑道上 -->
     <svg class="approach" viewBox="0 0 680 56" preserveAspectRatio="none" aria-hidden="true">
@@ -29,13 +35,33 @@ const featured = PROJECTS.filter((p) => p.featured);
     </svg>
   </section>
 
-  <h2 class="section-title">最新文章 <a href="/blog/">全部 →</a></h2>
-  {posts.length > 0 ? <PostList posts={posts} /> : <p class="muted">还没有文章，很快就来。</p>}
-
-  <h2 class="section-title">项目 <a href="/projects/">全部 →</a></h2>
+  <h2 class="section-title">精选项目 <a href="/projects/">全部 →</a></h2>
   <div class="grid">
     {featured.map((project) => <ProjectCard project={project} />)}
   </div>
+
+  <h2 class="section-title">经历速览 <a href="/about/">详细经历 →</a></h2>
+  <ul class="resume" role="list">
+    {
+      EDUCATION.map(({ school, major, degree, period }) => (
+        <li>
+          <span><strong>{school}</strong> <span class="muted">{major} · {degree}</span></span>
+          <span class="mono muted period">{period}</span>
+        </li>
+      ))
+    }
+    {
+      EXPERIENCE.map(({ company, role, period }) => (
+        <li>
+          <span><strong>{company}</strong> <span class="muted">{role}</span></span>
+          <span class="mono muted period">{period}</span>
+        </li>
+      ))
+    }
+  </ul>
+
+  <h2 class="section-title">最新文章 <a href="/blog/">全部 →</a></h2>
+  {posts.length > 0 ? <PostList posts={posts} /> : <p class="muted">还没有文章，很快就来。</p>}
 </Base>
 
 <style>
@@ -57,6 +83,13 @@ const featured = PROJECTS.filter((p) => p.featured);
     margin: 0;
     max-width: 36rem;
     color: var(--muted);
+  }
+
+  .hero-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1.25rem;
+    margin-top: 1rem;
   }
 
   .approach {
@@ -84,7 +117,35 @@ const featured = PROJECTS.filter((p) => p.featured);
 
   .grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(17rem, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 17rem), 1fr));
     gap: 0.9rem;
+  }
+
+  .resume {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .resume li {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.15rem 1rem;
+    padding-block: 0.45rem;
+    font-size: 0.9375rem;
+  }
+
+  .resume li + li {
+    border-top: 1px solid var(--border);
+  }
+
+  .resume strong {
+    margin-inline-end: 0.35rem;
+  }
+
+  .period {
+    white-space: nowrap;
   }
 </style>

@@ -5,6 +5,8 @@ export interface Project {
   stack: string[];
   link?: { href: string; label: string };
   featured?: boolean;
+  highlight?: string;
+  post?: string;
 }
 
 const gh = (name: string) => `https://github.com/BeforeLanding/${name}`;

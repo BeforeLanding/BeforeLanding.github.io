@@ -20,6 +20,8 @@ const { project } = Astro.props;
     }
   </h3>
   <p>{project.description}</p>
+  {project.highlight && <p class="highlight">{project.highlight}</p>}
+  {project.post && <a class="mono post" href={project.post}>深度文章 →</a>}
   <p class="mono muted stack">{project.stack.join(' · ')}</p>
 </article>
 
@@ -61,6 +63,18 @@ const { project } = Astro.props;
     margin: 0;
     font-size: 0.9375rem;
     line-height: 1.65;
+  }
+
+  .highlight {
+    margin-top: 0.65rem;
+    padding-inline-start: 0.65rem;
+    border-inline-start: 2px solid var(--accent);
+  }
+
+  .post {
+    align-self: flex-start;
+    margin-top: 0.65rem;
+    color: var(--accent);
   }
 
   .stack {

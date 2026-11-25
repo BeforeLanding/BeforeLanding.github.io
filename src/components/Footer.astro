@@ -9,6 +9,7 @@ const year = new Date().getFullYear();
     <span>© {year} {SITE.author}</span>
     <span class="links">
       <a href={SITE.github} rel="me noopener" target="_blank">GitHub</a>
+      {SITE.email && <a href={`mailto:${SITE.email}`}>Email</a>}
       <a href="/rss.xml">RSS</a>
     </span>
   </div>
@@ -22,6 +23,7 @@ const year = new Date().getFullYear();
 
   .row {
     display: flex;
+    flex-wrap: wrap;
     justify-content: space-between;
     gap: 1rem;
     padding-block: 1.5rem;
@@ -29,6 +31,7 @@ const year = new Date().getFullYear();
 
   .links {
     display: flex;
+    flex-wrap: wrap;
     gap: 1.25rem;
   }
 
