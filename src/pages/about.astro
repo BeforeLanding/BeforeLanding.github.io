@@ -64,7 +64,11 @@ import { EDUCATION, EXPERIENCE } from '../data/resume';
               </li>
             ))}
           </ul>
-          <p class="mono muted stack">{job.stack.join(' · ')}</p>
+          <ul class="chips stack" aria-label="技术栈">
+            {job.stack.map((s) => (
+              <li class="chip">{s}</li>
+            ))}
+          </ul>
         </li>
       ))
     }
@@ -161,7 +165,7 @@ import { EDUCATION, EXPERIENCE } from '../data/resume';
   }
 
   .stack {
-    margin: 0.75rem 0 0;
+    margin-top: 0.85rem;
   }
 
   .prose:last-child {

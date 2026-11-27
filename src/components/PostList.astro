@@ -16,8 +16,11 @@ const { posts } = Astro.props;
           {formatDate(post.data.pubDate)}
         </time>
         <a href={`/blog/${post.id}/`}>
-          {post.data.title}
-          {post.data.draft && <span class="mono draft">草稿</span>}
+          <span class="title">
+            {post.data.title}
+            {post.data.draft && <span class="mono draft">草稿</span>}
+          </span>
+          {post.data.description && <span class="desc">{post.data.description}</span>}
         </a>
       </li>
     ))
@@ -32,15 +35,41 @@ const { posts } = Astro.props;
   }
 
   li {
+    position: relative;
     display: grid;
     grid-template-columns: 6.5rem 1fr;
     align-items: baseline;
     gap: 0.5rem;
-    padding-block: 0.45rem;
+    margin-inline: -0.75rem;
+    padding: 0.55rem 0.75rem;
+    border-radius: 8px;
+    transition: background-color 0.15s;
+  }
+
+  li:hover {
+    background: var(--surface);
   }
 
   a {
+    display: flex;
+    flex-direction: column;
     text-decoration: none;
+  }
+
+  a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+
+  .title {
+    font-weight: 500;
+  }
+
+  .desc {
+    color: var(--muted);
+    font-size: 0.875rem;
+    line-height: 1.6;
   }
 
   .draft {

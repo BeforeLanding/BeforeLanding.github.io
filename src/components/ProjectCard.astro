@@ -10,7 +10,12 @@ const { project } = Astro.props;
 
 <article>
   <h3>
-    <a href={project.repo} target="_blank" rel="noopener">{project.name}</a>
+    <a class="name" href={project.repo} target="_blank" rel="noopener">
+      {project.name}
+      <svg class="arrow" viewBox="0 0 16 16" width="13" height="13" aria-hidden="true">
+        <path d="M5 11 11 5M6 5h5v5"></path>
+      </svg>
+    </a>
     {
       project.link && (
         <a class="mono extra" href={project.link.href} target="_blank" rel="noopener">
@@ -22,21 +27,30 @@ const { project } = Astro.props;
   <p>{project.description}</p>
   {project.highlight && <p class="highlight">{project.highlight}</p>}
   {project.post && <a class="mono post" href={project.post}>深度文章 →</a>}
-  <p class="mono muted stack">{project.stack.join(' · ')}</p>
+  <ul class="chips stack" aria-label="技术栈">
+    {project.stack.map((s) => <li class="chip">{s}</li>)}
+  </ul>
 </article>
 
 <style>
   article {
+    position: relative;
     display: flex;
     flex-direction: column;
-    padding: 1.1rem 1.2rem;
+    padding: 1.15rem 1.25rem 1.1rem;
     border: 1px solid var(--border);
-    border-radius: 10px;
-    transition: border-color 0.15s;
+    border-radius: 12px;
+    background: var(--bg);
+    transition:
+      border-color 0.2s,
+      box-shadow 0.2s,
+      transform 0.2s;
   }
 
   article:hover {
-    border-color: var(--muted);
+    border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+    box-shadow: var(--shadow);
+    transform: translateY(-2px);
   }
 
   h3 {
@@ -44,23 +58,64 @@ const { project } = Astro.props;
     align-items: baseline;
     justify-content: space-between;
     gap: 0.75rem;
-    margin: 0 0 0.4rem;
+    margin: 0 0 0.45rem;
     font-family: var(--font-mono);
     font-size: 0.9375rem;
   }
 
-  h3 a {
+  .name {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
     text-decoration: none;
+  }
+
+  /* 整张卡片可点：名字链接的伪元素铺满卡片，其他链接叠在上面 */
+  .name::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  .arrow {
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    opacity: 0;
+    transform: translate(-3px, 3px);
+    transition:
+      opacity 0.2s,
+      transform 0.2s;
+  }
+
+  article:hover .name {
+    color: var(--accent);
+  }
+
+  article:hover .arrow {
+    opacity: 1;
+    transform: none;
+  }
+
+  .extra,
+  .post {
+    position: relative;
+    z-index: 1;
   }
 
   .extra {
     font-weight: 400;
     color: var(--muted);
+    text-decoration: none;
     white-space: nowrap;
   }
 
   p {
     margin: 0;
+    color: color-mix(in srgb, var(--text) 82%, var(--muted));
     font-size: 0.9375rem;
     line-height: 1.65;
   }
@@ -79,6 +134,12 @@ const { project } = Astro.props;
 
   .stack {
     margin-top: auto;
-    padding-top: 0.75rem;
+    padding-top: 0.9rem;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    article:hover {
+      transform: none;
+    }
   }
 </style>
