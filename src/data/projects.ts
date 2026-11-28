@@ -31,13 +31,6 @@ export const PROJECTS: Project[] = [
     featured: true,
   },
   {
-    name: 'dsh-catch-up',
-    description: '离开一会儿，回来一屏看懂 Super-agent 的新进展。只读，不调用模型。',
-    repo: gh('dsh-catch-up'),
-    stack: ['TypeScript'],
-    featured: true,
-  },
-  {
     name: 'Runvori',
     description:
       '面向离席开发者的 Android 原生 Codex 客户端：在手机上看任务进度、处理审批、检查代码变更，断线后恢复任务视图。',
@@ -59,16 +52,18 @@ export const PROJECTS: Project[] = [
     stack: ['RL'],
   },
   {
-    name: 'sift',
-    description: '每日 AI 信息简报，通过 JEV 做前置筛选与价值判断。',
-    repo: gh('sift'),
-    stack: ['TypeScript'],
+    name: 'durakeep',
+    description:
+      '在本机运行的单用户知识库与日常助理：带引用的回答、长期偏好与提醒，基于 pi-durable 持久化执行，服务重启后能接着干。',
+    repo: gh('durakeep'),
+    stack: ['TypeScript', 'pi-durable'],
+    featured: true,
   },
   {
-    name: 'RAG-Knowledge-QA',
+    name: 'ui-testing',
     description:
-      '企业知识库问答系统：覆盖文档解析、Embedding 检索、Reranker 重排、答案生成与幻觉评测的全链路。',
-    repo: gh('RAG-Knowledge-QA'),
-    stack: ['Python', 'FastAPI', 'vLLM'],
+      'Claude Code skill：用 Playwright 在真实浏览器里测 Web UI，并对照爬虫得到的控件与状态清单，证明测到了哪些、漏了哪些。',
+    repo: gh('ui-testing'),
+    stack: ['JavaScript', 'Playwright'],
   },
 ];

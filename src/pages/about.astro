@@ -9,13 +9,14 @@ import { EDUCATION, EXPERIENCE } from '../data/resume';
     <h1>关于</h1>
   </header>
 
-  <div class="prose">
+  <div class="prose intro">
     <p>
-      我是 {SITE.author}，在 GitHub 上叫
-      <a href={SITE.github} target="_blank" rel="noopener">{SITE.handle}</a>。本科读数学，现在在新加坡国立大学读人工智能硕士。
+      我是 {SITE.author}（贾乾瑞），毕业于上海大学数学与应用数学专业，目前在新加坡国立大学读人工智能硕士，同时是
+      BHS Kinetic 的一名 Agent 开发实习生。
     </p>
     <p>
-      最近的精力主要放在编程 Agent 的工程问题上：怎么让一次长任务可以中断后恢复、每一步都能被检查、花费不失控，以及怎么用离线评测判断一个改动到底有没有变好。
+      最近在关注 Coding Agent Harness 和 AI for Math 的最新热点。这里主要分享我以一名数学系学生的视角对 AI
+      前沿信息的思考，以及转码过程中的学习路线。
     </p>
   </div>
 
@@ -56,14 +57,6 @@ import { EDUCATION, EXPERIENCE } from '../data/resume';
             <span class="mono muted period">{job.period}</span>
           </div>
           <p class="summary">{job.summary}</p>
-          <ul class="points">
-            {job.highlights.map((h) => (
-              <li>
-                {h.title && <strong>{h.title}：</strong>}
-                {h.text}
-              </li>
-            ))}
-          </ul>
           <ul class="chips stack" aria-label="技术栈">
             {job.stack.map((s) => (
               <li class="chip">{s}</li>
@@ -75,11 +68,11 @@ import { EDUCATION, EXPERIENCE } from '../data/resume';
   </ol>
 
   <div class="prose">
-    <h2>关于这个站点</h2>
-    <p>这里整理我的工程项目和经历，也记录三个方向的技术与学习笔记。</p>
+    <h2>关于这个博客</h2>
+    <p>定位是学习向博客，主要记录我的学习历程和分享笔记：</p>
     <ul>
       <li>Agent 工程实践与评测复盘，记录设计取舍、实验结果和踩过的坑</li>
-      <li>AI for Math 与形式化验证观察，包括 Lean 和自动证明</li>
+      <li>AI for Math 最新信息的个人理解与思考</li>
       <li>从数学转向 AI 工程的学习与转码复盘</li>
     </ul>
 
@@ -144,24 +137,19 @@ import { EDUCATION, EXPERIENCE } from '../data/resume';
   }
 
   .summary {
-    margin: 0.5rem 0 0.6rem;
+    margin: 0.5rem 0 0;
+    font-size: 0.9875rem;
   }
 
-  .facts,
-  .points {
+  .facts {
     margin: 0.4rem 0 0;
     padding-left: 1.2rem;
     font-size: 0.9375rem;
     line-height: 1.7;
   }
 
-  .facts li::marker,
-  .points li::marker {
+  .facts li::marker {
     color: var(--muted);
-  }
-
-  .points li + li {
-    margin-top: 0.4rem;
   }
 
   .stack {

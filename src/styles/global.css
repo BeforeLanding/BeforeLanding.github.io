@@ -1,12 +1,22 @@
+/* 暖色奶油底 + 樱花粉强调色；卡片是半透明磨砂玻璃 */
 :root {
-  --bg: #fbfaf7;
-  --surface: #f2f0ea;
-  --text: #1d1c1a;
-  --muted: #6f6b64;
-  --border: #e3dfd6;
-  --accent: #c2410c;
-  --accent-soft: rgb(194 65 12 / 0.1);
-  --shadow: 0 1px 2px rgb(60 40 20 / 0.04), 0 6px 20px -8px rgb(60 40 20 / 0.14);
+  --bg: #fff8f2;
+  --surface: rgb(255 255 255 / 0.55);
+  --glass: rgb(255 255 255 / 0.62);
+  --glass-border: rgb(255 255 255 / 0.85);
+  --text: #3b2f2c;
+  --muted: #7d6c66;
+  --border: #f0ddd5;
+  --accent: #c2456b;
+  --accent-soft: rgb(194 69 107 / 0.1);
+  --shadow: 0 1px 2px rgb(120 70 60 / 0.04), 0 12px 32px -14px rgb(170 90 90 / 0.28);
+  /* 背景图上盖一层奶油色纱：左侧文字区厚、右侧相册区薄，越往下越厚 */
+  --veil:
+    linear-gradient(90deg, rgb(255 248 242 / 0.86) 0%, rgb(255 248 242 / 0.6) 45%, rgb(255 248 242 / 0.3) 100%),
+    linear-gradient(180deg, transparent 50%, rgb(255 248 242 / 0.7));
+  --veil-page: linear-gradient(rgb(255 248 242 / 0.72), rgb(255 248 242 / 0.9));
+  --petal: #f7b6c8;
+  --radius: 22px;
 
   --font-sans:
     -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB',
@@ -20,15 +30,23 @@
   color-scheme: light;
 }
 
+/* 夜间：深靛蓝夜空 + 暖色光斑 */
 :root[data-theme='dark'] {
-  --bg: #141413;
-  --surface: #1e1d1b;
-  --text: #e9e6df;
-  --muted: #9a958b;
-  --border: #2f2d29;
-  --accent: #fb923c;
-  --accent-soft: rgb(251 146 60 / 0.12);
-  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 8px 24px -10px rgb(0 0 0 / 0.6);
+  --bg: #1b1926;
+  --surface: rgb(255 255 255 / 0.06);
+  --glass: rgb(38 35 54 / 0.62);
+  --glass-border: rgb(255 255 255 / 0.08);
+  --text: #f0e8ea;
+  --muted: #aa9fa8;
+  --border: #3a3548;
+  --accent: #f39cb5;
+  --accent-soft: rgb(243 156 181 / 0.14);
+  --shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 14px 34px -14px rgb(0 0 0 / 0.7);
+  --veil:
+    linear-gradient(90deg, rgb(27 25 38 / 0.9) 0%, rgb(27 25 38 / 0.74) 45%, rgb(27 25 38 / 0.55) 100%),
+    linear-gradient(180deg, transparent 50%, rgb(27 25 38 / 0.6));
+  --veil-page: linear-gradient(rgb(27 25 38 / 0.86), rgb(27 25 38 / 0.94));
+  --petal: rgb(243 156 181 / 0.55);
   color-scheme: dark;
 }
 
@@ -51,9 +69,98 @@ body {
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-sans);
+  position: relative;
+  isolation: isolate;
   font-size: 1.0625rem;
   line-height: 1.75;
   -webkit-font-smoothing: antialiased;
+}
+
+/* 固定在视口的背景图（不用 background-attachment: fixed，移动端更稳）。
+   图先轻微模糊放大，再盖一层纱，避免低分辨率原图的锯齿抢戏。 */
+body::before,
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: -3;
+  pointer-events: none;
+}
+
+body::before {
+  inset: -24px;
+  background: url('/images/bg-meadow.webp') center 30% / cover no-repeat;
+  filter: blur(3px) saturate(1.05);
+}
+
+body::after {
+  z-index: -2;
+  background: var(--veil-page);
+}
+
+body.home::before {
+  filter: blur(1.5px) saturate(1.05) brightness(1.03);
+}
+
+body.home::after {
+  background: var(--veil);
+}
+
+/* 磨砂玻璃卡片 */
+.glass {
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  background: var(--glass);
+  box-shadow: var(--shadow);
+  -webkit-backdrop-filter: blur(18px) saturate(1.4);
+  backdrop-filter: blur(18px) saturate(1.4);
+}
+
+/* 内页正文放在一张玻璃“纸”上 */
+.paper {
+  padding: 2.25rem 1.5rem 2.5rem;
+}
+
+@media (min-width: 48rem) {
+  .paper {
+    margin-inline: -2rem;
+    padding: 2.75rem 2rem 3rem;
+  }
+}
+
+/* 飘落的樱花瓣（纯装饰） */
+.petals {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.petals i {
+  position: absolute;
+  top: -5vh;
+  left: var(--x);
+  width: 11px;
+  height: 8px;
+  border-radius: 80% 0 80% 0;
+  background: var(--petal);
+  opacity: 0;
+  animation: petal-fall var(--d, 16s) linear var(--delay, 0s) infinite;
+}
+
+@keyframes petal-fall {
+  0% {
+    transform: translate(0, 0) rotate(0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.85;
+  }
+  100% {
+    transform: translate(-14vw, 110vh) rotate(540deg);
+    opacity: 0;
+  }
 }
 
 ::selection {
@@ -98,6 +205,10 @@ h3 {
 main {
   flex: 1;
   padding-block: 3rem 5rem;
+}
+
+main.home-main {
+  padding-block: 0;
 }
 
 .mono {
@@ -400,6 +511,10 @@ main {
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
+  }
+
+  .petals {
+    display: none;
   }
 
   * {

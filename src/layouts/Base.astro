@@ -9,9 +9,23 @@ interface Props {
   title?: string;
   description?: string;
   type?: 'website' | 'article';
+  /** 首页：正文不套玻璃纸，背景纱更薄 */
+  home?: boolean;
 }
 
-const { title, description = SITE.description, type = 'website' } = Astro.props;
+const { title, description = SITE.description, type = 'website', home = false } = Astro.props;
+// 樱花瓣的横向位置、时长与延迟；固定值，避免每次构建不同
+const PETALS = [
+  [6, 17, 0],
+  [18, 21, -6],
+  [31, 15, -11],
+  [44, 19, -3],
+  [57, 23, -14],
+  [68, 16, -8],
+  [79, 20, -1],
+  [91, 18, -12],
+  [100, 22, -5],
+] as const;
 const pageTitle = title ? `${title} · ${SITE.title}` : `${SITE.title} · ${SITE.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
@@ -46,11 +60,35 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
       })();
     </script>
   </head>
-  <body>
+  <body class:list={{ home }}>
+    <div class="petals" aria-hidden="true">
+      {PETALS.map(([x, d, delay]) => <i style={`--x:${x}%;--d:${d}s;--delay:${delay}s`} />)}
+    </div>
     <Header />
-    <main class="wrap">
-      <slot />
-    </main>
+    {
+      home ? (
+        <main class="home-main">
+          <slot />
+        </main>
+      ) : (
+        <main class="wrap">
+          <div class="paper glass">
+            <slot />
+          </div>
+        </main>
+      )
+    }
     <Footer />
+
+    <script is:inline>
+      // 所有带 data-theme-toggle 的按钮（顶栏、首页导航卡）共用一个切换逻辑
+      document.addEventListener('click', (event) => {
+        if (!(event.target instanceof Element) || !event.target.closest('[data-theme-toggle]')) return;
+        const root = document.documentElement;
+        const next = root.dataset.theme === 'dark' ? 'light' : 'dark';
+        root.dataset.theme = next;
+        localStorage.setItem('theme', next);
+      });
+    </script>
   </body>
 </html>
